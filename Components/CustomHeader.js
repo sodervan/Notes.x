@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const CustomHeader = ({ title }) => {
   const navigation = useNavigation();
+  const catName = useStore((state) => state.categoryName);
   const notes = useStore((state) => state.notes);
   const addToNotes = useStore((state) => state.addToNote);
   const word = useStore((state) => state.title);
@@ -60,23 +61,34 @@ const CustomHeader = ({ title }) => {
       ) : (
         <TouchableOpacity
           onPress={() => {
-            if (currentNote.title) {
-              notes.splice(currentNote.id, 1);
+            if (catName) {
               addToNotes({
+                categoryName: catName,
                 title: word,
                 description: desc,
                 date: getDate(),
                 color: getRandomColor(),
               });
-              clearCurrent()
             } else {
-              addToNotes({
-                title: word,
-                description: desc,
-                date: getDate(),
-                color: getRandomColor(),
-              });
+              if (currentNote.title) {
+                notes.splice(currentNote.id, 1);
+                addToNotes({
+                  title: word,
+                  description: desc,
+                  date: getDate(),
+                  color: getRandomColor(),
+                });
+                clearCurrent();
+              } else {
+                addToNotes({
+                  title: word,
+                  description: desc,
+                  date: getDate(),
+                  color: getRandomColor(),
+                });
+              }
             }
+
             navigation.navigate("MainTabs");
           }}
         >

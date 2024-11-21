@@ -3,9 +3,13 @@ import notes from "../Components/Notes";
 
 const useStore = create((set) => ({
   title: "",
+  categoryName: "",
+  categoriesTitle: "",
+  categoriesDescription: "",
   description: "",
   date: "",
   notes: [],
+  categories: [],
   isSelection: false,
   selectedIndexes: [],
   colors: [
@@ -43,11 +47,26 @@ const useStore = create((set) => ({
   ],
   currentRoute: "note",
   currentNote: [],
+  catCurrNote: [],
+  addCategories: false,
 
+  handleAddCategories: () =>
+    set((state) => ({
+      addCategories: !state.addCategories,
+    })),
   handleEnableSelection: (index) =>
     set((state) => ({
-      isSelection: !state.isSelection,
       selectedIndexes: [...state.selectedIndexes, index],
+    })),
+  removeSelection: (index) =>
+    set((state) => ({
+      selectedIndexes: state.selectedIndexes.filter(
+        (number) => number !== index,
+      ),
+    })),
+  addToCategories: (item) =>
+    set((state) => ({
+      categories: [...state.categories, item],
     })),
   addToSelected: (index) =>
     set((state) => ({
@@ -61,6 +80,11 @@ const useStore = create((set) => ({
     })),
 
   setTitle: (title) => set({ title }),
+  setCatTitle: (categoriesTitle) => set({ categoriesTitle }),
+  setCatName: (name) =>
+    set((state) => ({
+      categoryName: name,
+    })),
   setCurrentNote: (index) =>
     set((state) => ({
       title: state.notes[index].title,
@@ -69,7 +93,9 @@ const useStore = create((set) => ({
     })),
   clearTitle: () => set({ title: "" }),
   clearCurrent: () => set({ currentNote: [] }),
+  clearCatCurrent: () => set({ catCurrNote: [] }),
   setDescription: (description) => set({ description }),
+  setCatDescription: (categoriesDescription) => set({ categoriesDescription }),
   clearDesc: () => set({ description: "" }),
 }));
 

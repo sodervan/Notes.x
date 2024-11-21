@@ -21,7 +21,7 @@ const handleHead = ({ tintColor }) => (
   <Text style={{ color: tintColor }}>H1</Text>
 );
 
-const NewNotesPage = () => {
+const NewNotesPage = ({ route }) => {
   const navigation = useNavigation();
   const richText = useRef();
   const keyboard = useKeyboard();
@@ -31,12 +31,18 @@ const NewNotesPage = () => {
   const changeDesc = useStore((state) => state.setDescription);
   const getCurrent = useStore((state) => state.currentNote);
   const clearCurrent = useStore((state) => state.clearCurrent);
+  const setCatName = useStore((state) => state.setCatName);
   const handleScreenLeave = useCallback(() => {
     setTimeout(() => {
       changeTitle("");
       changeDesc("");
-      clearCurrent()
+      clearCurrent();
     }, 100);
+  }, []);
+
+  useEffect(() => {
+    const { name } = route.params || [];
+    setCatName(name);
   }, []);
 
   useFocusEffect(

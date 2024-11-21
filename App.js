@@ -13,22 +13,15 @@ import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 import React, { useState, useEffect } from "react";
 import useStore from "./Store/Store";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useRoute } from "@react-navigation/native";
-import { useNavigationState } from "@react-navigation/native";
+import "./gesture-handler";
+import CategoriesNotes from "./Components/CategoriesNotes";
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const TabNavigator = () => {
-  const route = useStore((state) => state.currentRoute);
-  const changeRoute = useStore((state) => state.changeRoute);
   return (
     <Tab.Navigator
-      onStateChange={(state) => {
-        const route = state.routes[state.index];
-        changeRoute(route);
-      }}
       activeColor="white"
       barStyle={{
         backgroundColor: "black",
@@ -74,7 +67,7 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     "Poppins-Bold": require("./assets/Fonts/Poppins-Bold.ttf"),
     "Poppins-SemiBold": require("./assets/Fonts/Poppins-SemiBold.ttf"),
-    "Poppins-Regular": require("./assets/Fonts/Poppins-Regular.ttf")
+    "Poppins-Regular": require("./assets/Fonts/Poppins-Regular.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -84,15 +77,38 @@ export default function App() {
   return (
     <NavigationContainer
       onStateChange={(state) => {
-        const currentRoute = state.routes[state.index];
-        changeRoute(currentRoute.name);
+        // Get the name of the current route and update the store
+        const currentRouteName = state.routes[state.index].name;
+        changeRoute(currentRouteName);
       }}
     >
       <StatusBar backgroundColor="white" />
       <CustomHeader title={route} />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="MainTabs" component={TabNavigator} />
-        <Stack.Screen name="NewNotesPage" component={NewNotesPage} />
+        <Stack.Screen
+          name="MainTabs"
+          component={TabNavigator}
+          options={{
+            presentation: "modal",
+            animation: "default",
+          }}
+        />
+        <Stack.Screen
+          name="NewNotesPage"
+          component={NewNotesPage}
+          options={{
+            presentation: "modal",
+            animation: "default",
+          }}
+        />
+        <Stack.Screen
+          name="CategoriesNotes"
+          component={CategoriesNotes}
+          options={{
+            presentation: "modal",
+            animation: "default",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
